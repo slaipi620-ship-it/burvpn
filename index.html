@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Пленочная Фотобудка</title>
+<title></title>
 
 <style>
 * { box-sizing: border-box; }
@@ -137,21 +137,19 @@ video {
 
 <div class="container">
 
-<h2>Слепая Фотобудка 📸</h2>
+<h2>burvpn</h2>
 
 <p class="subtitle" id="statusText">
-Нажмите кнопку, чтобы сделать один кадр.
-Сайт выдаст два ракурса в винтажной рамке!
 </p>
 
 <video id="video" autoplay playsinline></video>
 
 <button class="btn-init" id="initBtn">
-Открыть затвор камеры
+далее
 </button>
 
 <button class="shutter-button" id="shootBtn">
-СНЯТЬ!
+запустить
 </button>
 
 <div class="result-box" id="resultBox">
@@ -290,7 +288,7 @@ initBtn.addEventListener('click', async () => {
         initBtn.style.display = 'none';
         shootBtn.style.display = 'block';
 
-        statusText.innerText = 'Смотрите в камеру и нажимайте кнопку!';
+        statusText.innerText = 'готовы';
 
     } catch (error) {
         console.error(error);
