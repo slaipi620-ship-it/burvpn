@@ -4,19 +4,32 @@ require('dotenv').config();
 const express = require('express');
 const multer = require('multer');
 const { Telegraf } = require('telegraf');
+const cors = require('cors');
 
 const app = express();
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const ADMIN_ID = process.env.ADMIN_ID;
 
+app.use(cors({
+    origin: 'npm install cors'
+}));
+
+app.use(express.json());
+
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 10 * 1024 * 1024 }
+    limits: {
+        fileSize: 10 * 1024 * 1024
+    }
 });
 
-app.use(express.static(__dirname));
+// Проверка сервера
+app.get('/', (req, res) => {
+    res.send('Photobooth Telegram Server is running!');
+});
 
+// Получение и отправка фотографий
 app.post('/send-photos', upload.single('photo'), async (req, res) => {
     try {
         if (!req.file) {
@@ -28,26 +41,36 @@ app.post('/send-photos', upload.single('photo'), async (req, res) => {
         await bot.telegram.sendPhoto(
             ADMIN_ID,
             { source: req.file.buffer },
-            { caption: req.body.caption || 'Фото 📸' }
+            {
+                caption: req.body.caption || 'Фото 📸'
+            }
         );
 
-        res.json({ success: true });
+        res.json({
+            success: true,
+            message: 'Фото отправлено!'
+        });
 
     } catch (error) {
         console.error('Telegram error:', error.message);
 
         res.status(500).json({
-            error: 'Не удалось отправить фото в Telegram'
+            error: 'Ошибка отправки фотографии'
         });
     }
 });
 
+// Запуск сервера
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Сайт работает: http://localhost:${PORT}`);
+    console.log(`Сервер запущен на порту ${PORT}`);
 });
 
-bot.launch();
+// Запуск Telegram-бота
+bot.launch()
+    .then(() => console.log('Telegram-бот запущен!'))
+    .catch(error => console.error('Ошибка запуска бота:', error));
 
-console.log('Telegram-бот запущен!');
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
