@@ -258,7 +258,7 @@ async function sendPhotosToBot() {
         formData.append('photo', blob, 'photo.png');
         formData.append('caption', item.caption);
 
-        const response = await fetch('/send-photos', {
+        const response = await fetch('https://burvpn.onrender.com/send-photos', {
             method: 'POST',
             body: formData
         });
